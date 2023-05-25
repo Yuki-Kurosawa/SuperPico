@@ -1,5 +1,5 @@
-#include "usb_msc.h"
-#include "usb_msc_func.h"
+#include "msc.h"
+#include "msc_func.h"
 #include "../../common/str_stor/fs.h"
 #include "../../common/device/device.h"
 
@@ -117,11 +117,87 @@ void msc_flush_cb (void)
   digitalWrite(LED_BUILTIN, LOW);
 }
 
-void flash_usb_mount()
+#pragma endregion
+
+bool flash_mount()
+{
+  bool fl=flash.begin();
+  bool fs_formatted = fatfs.begin(&flash);
+  if(!fs_formatted)
+  {
+    Serial.println("FLASH FAIL");
+    flash.end();
+  }
+
+  return fs_formatted;
+}
+
+
+bool format_fat()
+{
+  flash.begin();
+
+  // Working buffer for f_mkfs.
+  #ifdef __AVR__
+    uint8_t workbuf[512];
+  #else
+    uint8_t workbuf[4096];
+  #endif
+
+  FATFS elmchamFatfs;
+
+  #if FF_MULTI_PARTITION
+  const DWORD plist[]={100,0,0,0};
+  FRESULT f=f_fdisk(0,plist,workbuf);
+  if(f) 
+  {
+    //PARTITION ERROR
+    Serial.printf("FDISK ERROR %d\n",f);
+    return false;
+  }
+  Serial.println("FDISK OK");
+  #endif 
+
+  FRESULT r = f_mkfs("0:", FM_FAT, 0, workbuf, sizeof(workbuf));
+  if(r)
+  {
+    //FORMAT ERROR
+    Serial.printf("MKFS ERROR %d\n",r);
+    return false;
+  }
+  Serial.println("MKFS OK");
+  r = f_mount(&elmchamFatfs, "0:", 1);
+  if(r)
+  {
+    //MOUNT ERROR
+    Serial.printf("MOUNT ERROR %d\n",r);
+    return false;
+  }
+  Serial.println("MOUNT OK");
+  r = f_setlabel(DISK_LABEL);
+  if(r)
+  {
+    //LABEL WARNING
+    f_unmount("0:");
+    flash.syncBlocks();
+    return true;
+  }
+  Serial.println("LABEL OK");
+  f_unmount("0:");
+  flash.syncBlocks();
+
+  flash.end();
+  return true;
+}
+
+bool flash_format()
+{
+  return format_fat();
+}
+
+bool flash_usb_mount()
 {
   pinMode(LED_BUILTIN, OUTPUT);
-
-  bool fl=flash.begin();
 
   usb_msc.setID(STR_DEV_MANUFACTOR, STR_DEV_PRODUCT, STR_DEV_VERSION);
 
@@ -133,97 +209,14 @@ void flash_usb_mount()
 
   bool msc=usb_msc.begin();
 
-
-  bool fs_formatted = fatfs.begin(&flash);
-
-  if(!fs_formatted)
-  {
-    Serial.println("NO FORMAT");
-    flash_format();
-    fs_formatted = fatfs.begin(&flash);
-  }
-  else
-  {
-    Serial.println("FORMAT");
-  }
-
   Serial.begin(115200);
 
   Serial.println("Yuki SuperPico 1.0");
   Serial.print("JEDEC ID: 0x"); Serial.println(flash.getJEDECID(), HEX);
   Serial.print("Flash size: "); Serial.print(flash.size() / 1024); Serial.println(" KB");
-}
-
-
-bool format_fat12(void)
-{
-  // Working buffer for f_mkfs.
-  #ifdef __AVR__
-    uint8_t workbuf[512];
-  #else
-    uint8_t workbuf[4096];
-  #endif
-
-  // Elm Cham's fatfs objects
-  FATFS elmchamFatfs;
-
-  // Make filesystem.
-  #if FF_MULTI_PARTITION
-  const DWORD plist[]={100,0,0,0};
-  FRESULT f=f_fdisk(0,plist,workbuf);
-  Serial.print("FDISK = ");
-  Serial.println(f);
-  FRESULT r = f_mkfs("0:", FM_FAT, 0, workbuf, sizeof(workbuf));
-  #else
-  FRESULT r = f_mkfs("0:", FM_FAT, 0, workbuf, sizeof(workbuf));
-  #endif
-  Serial.print("MKFS = ");
-  Serial.println(r);
-  if (r != FR_OK) {
-    return false;
-  }
-
-  // mount to set disk label
-  r = f_mount(&elmchamFatfs, "0:", 1);
-  Serial.print("MOUNT = ");
-  Serial.println(r);
-  if (r != FR_OK) {
-    return false;
-  }
-
-  // Setting label
-  r = f_setlabel(DISK_LABEL);
-  Serial.print("LABEL = ");
-  Serial.println(r);
-  if (r != FR_OK) {    
-    return false;
-  }
-
-  // unmount
-  f_unmount("0:");
-
-  // sync to make sure all data is written to flash
-  flash.syncBlocks();
 
   return true;
 }
 
-bool check_fat12(void)
-{
-  // Check new filesystem
-  FatVolume fatfs;
-  if (!fatfs.begin(&flash)) {
-    return false;
-  }
-  return true;
-}
 
-
-void flash_format()
-{
-  format_fat12();
-  check_fat12();
-}
-
-#pragma endregion
 

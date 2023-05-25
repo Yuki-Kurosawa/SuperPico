@@ -13,7 +13,7 @@ void setup() {
   //float spi=clock_get_hz(clk_peri)/2.0/MHZ;
 
   init();
-  boot_screen();
+  if(!boot_screen()) return;
 
   
   

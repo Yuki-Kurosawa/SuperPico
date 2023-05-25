@@ -2,7 +2,7 @@
 #include "../../common/str_stor/stor.h"
 
 
-void boot_screen() {
+bool boot_screen() {
 
   tft_clean();
   delay(1000);
@@ -13,11 +13,22 @@ void boot_screen() {
   print(STR_BOARD_BOOTING,COL(4.5),ROW(5));
   tft_drawrect(14, ROW(7), 100, 16);
 
-  for(int i=0;i<=100;i++)
+  // for(int i=0;i<=100;i++)
+  // {
+  //   tft_fillrect(14, ROW(7), i, 16);
+  //   delay(100);
+  // }
+
+  bool fm=flash_mount();
+  if(!fm)
   {
-    tft_fillrect(14, ROW(7), i, 16);
-    delay(100);
+    bool ff=flash_format();
+    fm=flash_mount();
+
+    if(!fm) return false;
   }
 
   flash_usb_mount();
+
+  return true;
 }
