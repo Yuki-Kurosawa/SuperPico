@@ -13,6 +13,8 @@ bool boot_screen() {
   print(STR_BOARD_BOOTING,COL(4.5),ROW(5));
   tft_drawrect(14, ROW(7), 100, 16);
 
+  delay(1000);
+
   // for(int i=0;i<=100;i++)
   // {
   //   tft_fillrect(14, ROW(7), i, 16);

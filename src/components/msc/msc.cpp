@@ -125,7 +125,6 @@ bool flash_mount()
   bool fs_formatted = fatfs.begin(&flash);
   if(!fs_formatted)
   {
-    Serial.println("FLASH FAIL");
     flash.end();
   }
 
@@ -152,28 +151,34 @@ bool format_fat()
   if(f) 
   {
     //PARTITION ERROR
-    Serial.printf("FDISK ERROR %d\n",f);
+    tft_clean_print("Partition Error",COL(0),ROW(0));
+    tft_print("Error Code: ",COL(0),ROW(1));
+    tft_print(f,COL(11),ROW(1));
     return false;
   }
-  Serial.println("FDISK OK");
+  
   #endif 
 
   FRESULT r = f_mkfs("0:", FM_FAT, 0, workbuf, sizeof(workbuf));
   if(r)
   {
     //FORMAT ERROR
-    Serial.printf("MKFS ERROR %d\n",r);
+    tft_clean_print("Format Error",COL(0),ROW(0));
+    tft_print("Error Code: ",COL(0),ROW(1));
+    tft_print(r,COL(11),ROW(1));
     return false;
   }
-  Serial.println("MKFS OK");
+
   r = f_mount(&elmchamFatfs, "0:", 1);
   if(r)
   {
     //MOUNT ERROR
-    Serial.printf("MOUNT ERROR %d\n",r);
+    tft_clean_print("Mount Error:",COL(0),ROW(0));
+    tft_print("Error Code: ",COL(0),ROW(1));
+    tft_print(r,COL(11),ROW(1));
     return false;
   }
-  Serial.println("MOUNT OK");
+
   r = f_setlabel(DISK_LABEL);
   if(r)
   {
@@ -182,7 +187,7 @@ bool format_fat()
     flash.syncBlocks();
     return true;
   }
-  Serial.println("LABEL OK");
+
   f_unmount("0:");
   flash.syncBlocks();
 

@@ -9,7 +9,7 @@
   #define ENGLISH_FONT u8g2_font_unifont_te
   #define LANG zh
 
-  #define SERIAL_ENABLED 1
+  #define SERIAL_ENABLED 0
 
   #define OVERCLOCK_SPI 0
 
