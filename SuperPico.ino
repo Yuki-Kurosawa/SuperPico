@@ -16,13 +16,10 @@ void setup() {
   if(!boot_screen()) return;
 
   
-  
 }
 
-void loop() {
-  
-  //HERE
-
+void loop() {  
+  //HERE  
 }
 
 

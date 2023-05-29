@@ -10,27 +10,36 @@ bool boot_screen() {
   print(STR_BOARD_NAME, COL(0), ROW(0));
   print(STR_BOARD_VERSION,COL(0),ROW(1));
 
-  print(STR_BOARD_BOOTING,COL(4.5),ROW(5));
-  tft_drawrect(14, ROW(7), 100, 16);
-
+  print(STR_PREPARE_BOOT,COL(0),ROW(4));
   delay(1000);
 
-  // for(int i=0;i<=100;i++)
-  // {
-  //   tft_fillrect(14, ROW(7), i, 16);
-  //   delay(100);
-  // }
-
+  tft_clean(COL(0),ROW(3),128,64);
+  print(STR_MOUNT,COL(0),ROW(4));
   bool fm=flash_mount();
+  delay(1000);
+
   if(!fm)
   {
+    tft_clean(COL(0),ROW(3),128,64);
+    print(STR_FORMAT_NEW,COL(0),ROW(4));
+    delay(1000);
     bool ff=flash_format();
+    delay(1000);
+    
+    tft_clean(COL(0),ROW(3),128,64);
+    print(STR_MOUNT_NEW,COL(0),ROW(4));
     fm=flash_mount();
+    delay(1000);
 
     if(!fm) return false;
+    
   }
 
-  flash_usb_mount();
+  tft_clean(COL(0),ROW(3),128,64);
+  print(STR_PREPARE_FINISH,COL(0),ROW(4));
+  delay(1000);
+
+  //flash_usb_mount();
 
   return true;
 }

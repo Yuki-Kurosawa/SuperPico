@@ -151,9 +151,10 @@ bool format_fat()
   if(f) 
   {
     //PARTITION ERROR
-    tft_clean_print("Partition Error",COL(0),ROW(0));
-    tft_print("Error Code: ",COL(0),ROW(1));
-    tft_print(f,COL(11),ROW(1));
+    tft_clean(COL(0),ROW(3),128,64);
+    print("Partition Error",COL(0),ROW(4));
+    print("Error Code: ",COL(0),ROW(5));
+    print(f,COL(11),ROW(5));
     return false;
   }
   
@@ -163,9 +164,10 @@ bool format_fat()
   if(r)
   {
     //FORMAT ERROR
-    tft_clean_print("Format Error",COL(0),ROW(0));
-    tft_print("Error Code: ",COL(0),ROW(1));
-    tft_print(r,COL(11),ROW(1));
+    tft_clean(COL(0),ROW(3),128,64);
+    print("Format Error",COL(0),ROW(4));
+    print("Error Code: ",COL(0),ROW(5));
+    print(r,COL(11),ROW(5));
     return false;
   }
 
@@ -173,9 +175,10 @@ bool format_fat()
   if(r)
   {
     //MOUNT ERROR
-    tft_clean_print("Mount Error:",COL(0),ROW(0));
-    tft_print("Error Code: ",COL(0),ROW(1));
-    tft_print(r,COL(11),ROW(1));
+    tft_clean(COL(0),ROW(3),128,64);
+    print("Mount Error:",COL(0),ROW(4));
+    tft_print("Error Code: ",COL(0),ROW(5));
+    tft_print(r,COL(11),ROW(5));
     return false;
   }
 
@@ -216,9 +219,9 @@ bool flash_usb_mount()
 
   Serial.begin(115200);
 
-  Serial.println("Yuki SuperPico 1.0");
-  Serial.print("JEDEC ID: 0x"); Serial.println(flash.getJEDECID(), HEX);
-  Serial.print("Flash size: "); Serial.print(flash.size() / 1024); Serial.println(" KB");
+  // Serial.println("Yuki SuperPico 1.0");
+  // Serial.print("JEDEC ID: 0x"); Serial.println(flash.getJEDECID(), HEX);
+  // Serial.print("Flash size: "); Serial.print(flash.size() / 1024); Serial.println(" KB");
 
   return true;
 }
