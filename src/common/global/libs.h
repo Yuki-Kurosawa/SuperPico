@@ -13,5 +13,6 @@
     #include <TFT_eSPI.h>
   #endif
 
+  #include <TinyMenu.h>
  
 #endif
