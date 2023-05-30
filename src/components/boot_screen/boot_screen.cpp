@@ -20,13 +20,13 @@ bool boot_screen() {
 
   if(!fm)
   {
-    tft_clean(COL(0),ROW(3),128,64);
+    tft_clean(COL(0),ROW(3),FONT_WIDTH*16,FONT_HEIGHT*4);
     print(STR_FORMAT_NEW,COL(0),ROW(4));
     delay(1000);
     bool ff=flash_format();
     delay(1000);
     
-    tft_clean(COL(0),ROW(3),128,64);
+    tft_clean(COL(0),ROW(3),FONT_WIDTH*16,FONT_HEIGHT*4);
     print(STR_MOUNT_NEW,COL(0),ROW(4));
     fm=flash_mount();
     delay(1000);
@@ -35,7 +35,7 @@ bool boot_screen() {
     
   }
 
-  tft_clean(COL(0),ROW(3),128,64);
+  tft_clean(COL(0),ROW(3),FONT_WIDTH*16,FONT_HEIGHT*4);
   print(STR_PREPARE_FINISH,COL(0),ROW(4));
   delay(1000);
 

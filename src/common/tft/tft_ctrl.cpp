@@ -56,23 +56,25 @@ void tft_init_font(const uint8_t* font,uint16_t color)
   tft.setTextColor(color);
 }
 
-void tft_print(const char* str,int16_t x,int16_t y,const uint8_t* font,uint16_t color)
+void tft_print(const char* str,int16_t x,int16_t y,const uint8_t* font,uint16_t color,uint16_t bcolor)
 {
-  tft_init_font(font,color);  
+  tft_init_font(font,color); 
+  tft.fillRect(x,y,FONT_WIDTH*16,FONT_HEIGHT*1,bcolor); 
   tft.setCursor(x,y);
   tft.println(str);
   tft.unloadFont();
 }
 
-void tft_print(int num,int16_t x,int16_t y,const uint8_t* font,uint16_t color)
+void tft_print(int num,int16_t x,int16_t y,const uint8_t* font,uint16_t color,uint16_t bcolor)
 {
-  tft_init_font(font,color);  
+  tft_init_font(font,color);
+  tft.fillRect(x,y,FONT_WIDTH*16,FONT_HEIGHT*1,bcolor);  
   tft.setCursor(x,y);
   tft.println(num,DEC);
   tft.unloadFont();
 }
 
-void tft_clean_print(const char* str,int16_t x,int16_t y,const uint8_t* font,uint16_t color)
+void tft_clean_print(const char* str,int16_t x,int16_t y,const uint8_t* font,uint16_t color,uint16_t bcolor)
 {
   tft_clean();
   tft_print(str,x,y,font,color);

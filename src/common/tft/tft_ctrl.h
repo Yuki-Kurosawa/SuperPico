@@ -25,9 +25,9 @@
   void tft_init();
   void tft_clean_all();
   void tft_clean(int16_t x=0,int16_t y=0,int16_t w=0,int16_t h=0);
-  void tft_print(const char* str,int16_t x,int16_t y,const uint8_t* font=unifont_en,uint16_t color=ST7735_WHITE);
-  void tft_print(int num,int16_t x,int16_t y,const uint8_t* font=unifont_en,uint16_t color=ST7735_WHITE);
-  void tft_clean_print(const char* str,int16_t x,int16_t y,const uint8_t* font=unifont_en,uint16_t color=ST7735_WHITE);
+  void tft_print(const char* str,int16_t x,int16_t y,const uint8_t* font=unifont_en,uint16_t color=ST7735_WHITE,uint16_t bcolor=ST7735_BLACK);
+  void tft_print(int num,int16_t x,int16_t y,const uint8_t* font=unifont_en,uint16_t color=ST7735_WHITE,uint16_t bcolor=ST7735_BLACK);
+  void tft_clean_print(const char* str,int16_t x,int16_t y,const uint8_t* font=unifont_en,uint16_t color=ST7735_WHITE,uint16_t bcolor=ST7735_BLACK);
   void tft_drawrect(int16_t x,int16_t y,int16_t w,int16_t h,uint32_t color=ST7735_YELLOW);
   void tft_fillrect(int16_t x,int16_t y,int16_t w,int16_t h,uint32_t color=ST7735_YELLOW);
 #endif
