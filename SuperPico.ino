@@ -1,9 +1,11 @@
 #include "src/common/global/pico-ports.h"
 #include "src/common/global/constants.h"
+#include "src/common/global/sram.h"
 #include "src/common/tft/tft_ctrl.h"
 #include "src/common/oc/overclock.h"
 #include "src/common/io_out/print.h"
 #include "src/components/boot_screen/boot_screen.h"
+
 
 void setup() {  
   
@@ -15,7 +17,8 @@ void setup() {
   init();
   if(!boot_screen()) return;
 
-  
+  delay(1000);
+
 }
 
 void loop() {  
