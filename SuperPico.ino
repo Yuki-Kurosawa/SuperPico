@@ -5,7 +5,7 @@
 #include "src/common/oc/overclock.h"
 #include "src/common/io_out/print.h"
 #include "src/components/boot_screen/boot_screen.h"
-#include "src/libs/TinyMenu/TinyMenu.h"
+#include <TinyMenu.h>
 
 void setup() {  
   
